@@ -22,12 +22,8 @@ export function usagePriceForm(model = "", price?: UsageModelPriceOverride): Usa
   };
 }
 
-/**
- * Whether a price cell may change from `previous` to `next` while typing:
- * digits with an optional decimal point (`.` or `,`), plus the exponent form saved
- * rates can stringify to. Deleting a run of characters is always allowed so a
- * mid-value delete such as `1e-7` to `e-7` is not stuck; saving still validates the result.
- */
+/** Allow decimal/exponent edits and all deletions, including temporarily invalid values; saving validates
+ * the result. */
 export function isUsagePriceEdit(previous: string, next: string): boolean {
   if (/^\s*(?:\d*[.,]?\d*|(?:\d+[.,]?\d*|[.,]\d+)e[+-]?\d*)\s*$/i.test(next)) return true;
   if (next.length >= previous.length) return false;
@@ -36,10 +32,8 @@ export function isUsagePriceEdit(previous: string, next: string): boolean {
   return next.slice(start) === previous.slice(previous.length - (next.length - start));
 }
 
-/**
- * Blank cache prices use the input rate; explicit zero means free.
- * A comma is accepted as the decimal point.
- */
+/** Blank cache prices use the input rate; explicit zero means free.
+ * A comma is accepted as the decimal point. */
 export function parseUsagePriceForm(
   form: UsagePriceForm,
 ): { model: string; price: UsageModelPriceOverride } | null {
