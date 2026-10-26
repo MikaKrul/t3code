@@ -338,7 +338,7 @@ function composerSkillMeta(
   };
 }
 
-function ComposerSkillNodeView({ node }: NodeViewProps) {
+function ComposerSkillNodeView({ node, editor, getPos }: NodeViewProps) {
   const actions = use(ComposerContextActionsContext);
   const skills = use(RichComposerSkillsContext);
   const skillName = (node.attrs.skillName as string) ?? "";
@@ -350,6 +350,18 @@ function ComposerSkillNodeView({ node }: NodeViewProps) {
   const skillLabel = skill
     ? formatProviderSkillDisplayName(skill)
     : (node.attrs.skillLabel as string) || skillName;
+  const removeSkill = () => {
+    if (!editor.isEditable) return;
+    const pos = typeof getPos === "function" ? getPos() : null;
+    if (typeof pos !== "number") return;
+    const current = editor.state.doc.nodeAt(pos);
+    if (!current || current.type.name !== "composer-skill") return;
+    editor
+      .chain()
+      .focus()
+      .deleteRange({ from: pos, to: pos + current.nodeSize })
+      .run();
+  };
   return (
     <NodeViewWrapper as="span" className={CHIP_NODE_SELECTION_CLASS_NAME}>
       <SkillChipPopover
@@ -358,6 +370,7 @@ function ComposerSkillNodeView({ node }: NodeViewProps) {
         onViewInstructions={
           skill?.path && actions.environmentId ? () => actions.openMention(skill.path) : undefined
         }
+        onRemove={removeSkill}
       />
     </NodeViewWrapper>
   );
