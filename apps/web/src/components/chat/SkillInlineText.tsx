@@ -134,11 +134,9 @@ export function SkillChipPopover(props: {
       </div>
     </>
   );
-  if (props.onRemove) {
-    // The close button stays outside the popover trigger so close and
-    // details remain separate buttons instead of nesting.
-    return (
-      <Popover>
+  return (
+    <Popover>
+      {props.onRemove ? (
         <SkillTabChipShell className="cursor-pointer hover:bg-accent/60">
           <PanelTabCloseButton label={`Remove ${props.label} skill`} onClick={props.onRemove}>
             <SkillTabChipBadge />
@@ -154,27 +152,21 @@ export function SkillChipPopover(props: {
           >
             <ContextChipLabel>{props.label}</ContextChipLabel>
           </PopoverTrigger>
-          <PopoverPopup side="top" width="lg" padding="compact">
-            {details}
-          </PopoverPopup>
         </SkillTabChipShell>
-      </Popover>
-    );
-  }
-  return (
-    <Popover>
-      <PopoverTrigger
-        render={
-          <SkillTabChipShell
-            render={<button type="button" />}
-            aria-label={`Skill ${props.label}. Show details`}
-            data-markdown-copy={props.copyMarkdown}
-          />
-        }
-      >
-        <SkillTabChipBadge />
-        <ContextChipLabel>{props.label}</ContextChipLabel>
-      </PopoverTrigger>
+      ) : (
+        <PopoverTrigger
+          render={
+            <SkillTabChipShell
+              render={<button type="button" />}
+              aria-label={`Skill ${props.label}. Show details`}
+              data-markdown-copy={props.copyMarkdown}
+            />
+          }
+        >
+          <SkillTabChipBadge />
+          <ContextChipLabel>{props.label}</ContextChipLabel>
+        </PopoverTrigger>
+      )}
       <PopoverPopup side="top" width="lg" padding="compact">
         {details}
       </PopoverPopup>
