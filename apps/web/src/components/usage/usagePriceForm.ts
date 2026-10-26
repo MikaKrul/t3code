@@ -32,8 +32,7 @@ export function isUsagePriceEdit(previous: string, next: string): boolean {
   return next.slice(start) === previous.slice(previous.length - (next.length - start));
 }
 
-/** Blank cache prices use the input rate; explicit zero means free.
- * A comma is accepted as the decimal point. */
+/** Blank cache prices use the input rate; explicit zero means free. */
 export function parseUsagePriceForm(
   form: UsagePriceForm,
 ): { model: string; price: UsageModelPriceOverride } | null {
